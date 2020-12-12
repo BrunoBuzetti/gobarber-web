@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 // eslint-disable-next-line no-use-before-define
 import React, {
   InputHTMLAttributes,
@@ -14,19 +15,26 @@ import { Container, Error } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  containerStyle?: object;
   icon: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({
+  name,
+  containerStyle = {},
+  icon: Icon,
+  ...rest
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   const { fieldName, defaultValue, error, registerField } = useField(name);
 
-  const handleInpuFocus = useCallback(() => {
+  const handleInputFocus = useCallback(() => {
     setIsFocused(true);
   }, []);
-  const handleInpuBlur = useCallback(() => {
+
+  const handleInputBlur = useCallback(() => {
     setIsFocused(false);
 
     setIsFilled(!!inputRef.current?.value);
@@ -41,18 +49,25 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
+    <Container
+      style={containerStyle}
+      isErrored={!!error}
+      isFilled={isFilled}
+      isFocused={isFocused}
+      data-testid="input-container"
+    >
       {Icon && <Icon size={20} />}
       <input
-        onFocus={handleInpuFocus}
-        onBlur={handleInpuBlur}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         defaultValue={defaultValue}
         ref={inputRef}
         {...rest}
       />
+
       {error && (
         <Error title={error}>
-          <FiAlertCircle color="#c53030" size={20} />{' '}
+          <FiAlertCircle color="#c53030" size={20} />
         </Error>
       )}
     </Container>

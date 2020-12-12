@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 // eslint-disable-next-line no-use-before-define
 import React, { useEffect } from 'react';
 
@@ -38,7 +39,7 @@ const Toast: React.FC<ToastProps> = ({ toastData, style }) => {
   return (
     <Container
       type={toastData.type}
-      hasDescription={!!toastData.description}
+      hasDescription={Number(!!toastData.description)}
       style={style}
     >
       {icons[toastData.type || 'info']}
